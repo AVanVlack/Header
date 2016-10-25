@@ -1,46 +1,25 @@
 let express = require('express'),
-    path = require('path'),
+    morgan = require('morgan'),
     app = express();
 
-let port = process.env.PORT || 8080;
+let port = process.env.PORT || 3000;
 
-
-//Date from unix route
-app.get('/:date(\\d+)/', (req, res) => {
-  let date = new Date(parseInt(req.params.date * 1000, 10));
-  payload = jsonDate(date);
-  res.json(payload);
-});
-
-//Date from natural languae route
-app.get('/:date', (req, res) => {
-  let date = new Date(req.params.date);
-  payload = jsonDate(date);
-  res.json(payload)
-});
+if(process.env.NODE_ENV === 'production'){
+  app.use(morgan('combined'));
+}else{
+  app.use(morgan('dev'));
+}
 
 //index/example of use route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/index.html'));
+  jHead = {}
+  jHead.address = req.headers["x-forwarded-for"]
+  jHead.language = req.headers["accept-language"]
+  jHead.system = req.headers["user-agent"]
+  res.json(jHead);
+  console.log(jHead);
 });
 
 app.listen(port, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Header app listening on port ' + port);
 });
-
-//turns Date into payload object
-function jsonDate(date){
-  let dateData = {};
-  if(date instanceof Date && isFinite(date)){
-    dateData.unix = Math.floor(date.getTime() / 1000);
-    let month = date.toLocaleString("en-us", { month: "long" });
-    dateData.natural = month + " " + date.getUTCDate() + ", " + date.getUTCFullYear()
-  }
-  else {
-    dateData = {
-      unix: null,
-      natural: null
-    }
-  }
-  return dateData
-}
