@@ -14,7 +14,7 @@ if(process.env.NODE_ENV === 'production'){
 app.get('/', (req, res) => {
   jHead = {}
   jHead.address = req.headers["x-forwarded-for"]
-  jHead.language = req.headers["accept-language"]
+  jHead.languages = req.headers["accept-language"]
   jHead.system = req.headers["user-agent"]
   res.json(jHead);
   console.log(jHead);
