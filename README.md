@@ -1,6 +1,6 @@
 # Header Microservice
 
-A simple microservice for returning the headers sent with an http request. Built as a practice project.
+A simple microservice for returning the headers sent with an http request.
 
 Running example on [heroku](https://vanvlack-header.herokuapp.com/).
 
